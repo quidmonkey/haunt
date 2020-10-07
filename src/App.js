@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { hot } from 'react-hot-loader/root';
 
-import { exportSound, getSound } from './utils/audioUtils';
+import { exportSound, getHowlerSound } from './utils/audioUtils';
 
 import FileLoader from './components/FileLoader';
 import StereoPanner from './components/StereoPanner';
@@ -16,7 +16,7 @@ function App() {
   const [sound, setSound] = useState({});
 
   const onFileLoad = async (newFileName, newFileType, newFileData) => {
-    const newSound = await getSound(newFileData.fileString);
+    const newSound = await getHowlerSound(newFileData.fileString);
 
     setFileName(newFileName);
     setSound(newSound);

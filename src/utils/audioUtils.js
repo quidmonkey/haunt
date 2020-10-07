@@ -11,7 +11,7 @@ export const exportSound = (audioBuffer, fileName) => {
   downloadFile(fileName, fileString);
 };
 
-export const getSound = async base64String => new Promise(resolve => {
+export const getHowlerSound = async base64String => new Promise(resolve => {
   const newSound = new Howl({
     autoplay: true,
     loop: true,
@@ -41,5 +41,5 @@ export const getSound = async base64String => new Promise(resolve => {
 
 export default {
   exportSound,
-  getSound
+  getHowlerSound
 };
