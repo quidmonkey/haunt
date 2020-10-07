@@ -3,8 +3,8 @@ import { Howl } from 'howler';
 
 import { downloadFile } from './generalUtils';
 
-export const exportSound = (sound, fileName) => {
-  const wavBuffer = encodeWAV(sound.audioBuffer);
+export const exportSound = (audioBuffer, fileName) => {
+  const wavBuffer = encodeWAV(audioBuffer);
   const blob = new Blob([wavBuffer], { type: 'audio/wav' });
   const fileString = URL.createObjectURL(blob);
 
@@ -20,10 +20,12 @@ export const getSound = async base64String => new Promise(resolve => {
 
   const setAudioBuffer = () => {
     // eslint-disable-next-line no-underscore-dangle
-    const { bufferSource } = newSound._sounds[0]._node.bufferSource;
+    const node = newSound._sounds[0]._node;
 
-    if (bufferSource) {
-      newSound.audioBuffer = bufferSource.buffer;
+    console.log('~~~ node', node);
+
+    if (node.bufferSource) {
+      newSound.audioBuffer = node.bufferSource.buffer;
     }
   };
 

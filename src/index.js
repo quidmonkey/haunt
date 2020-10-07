@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './App';
+import RawApp from './RawApp';
 // import * as serviceWorker from './serviceWorker';
 
 import './index.css';
@@ -10,7 +11,8 @@ import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <RawApp />
   </React.StrictMode>,
   document.getElementById('root')
 );
