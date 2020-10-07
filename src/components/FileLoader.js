@@ -11,7 +11,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  onFileLoad: (newFileName, newFileType, newFileString) => console.log(
+  onFileLoad: (newFileName, newFileType, newFileData) => console.log(
     `~~~ ${newFileName}.${newFileType} loaded`
   ),
   onHide: () => { },
@@ -30,7 +30,7 @@ export const FileLoader = ({ onFileLoad, onHide, show }) => {
       return alert(`Unable to load ${fileName} - only .wav files supported`);
     }
 
-    const binarystring = await new Promise(resolve => {
+    const binaryString = await new Promise(resolve => {
       const reader = new FileReader();
 
       reader.onload = res => {
@@ -39,10 +39,20 @@ export const FileLoader = ({ onFileLoad, onHide, show }) => {
 
       reader.readAsBinaryString(file);
     });
-    const base64string = btoa(binarystring);
+    const base64string = btoa(binaryString);
     const fileString = `data:audio/wav;base64,${base64string}`;
 
-    onFileLoad(fileName, fileType, fileString);
+    const arrayBuffer = await new Promise(resolve => {
+      const reader = new FileReader();
+
+      reader.onload = res => {
+        resolve(res.target.result);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+
+    onFileLoad(fileName, fileType, { arrayBuffer, fileString });
 
     onHide();
   };

@@ -15,8 +15,8 @@ function App() {
   const [showFileLoader, setShowFileLoader] = useState(false);
   const [sound, setSound] = useState({});
 
-  const onFileLoad = async (newFileName, newFileType, newFileString) => {
-    const newSound = await getSound(newFileString);
+  const onFileLoad = async (newFileName, newFileType, newFileData) => {
+    const newSound = await getSound(newFileData.fileString);
 
     setFileName(newFileName);
     setSound(newSound);
@@ -24,7 +24,7 @@ function App() {
 
   const onExport = () => {
     const outputFileName = `${fileName}-export.wav`;
-    exportSound(sound, outputFileName);
+    exportSound(sound.audioBuffer, outputFileName);
   };
 
   return (
