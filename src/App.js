@@ -49,7 +49,7 @@ function App() {
               :
               <>
                 <StereoPanner
-                  sound={sound}
+                  onStereoPan={newStereoPanValue => sound.stereo(newStereoPanValue)}
                 />
 
                 <div className={styles.actions}>

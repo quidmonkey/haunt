@@ -3,16 +3,20 @@ import React, { useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
 
 const propTypes = {
-  sound: PropTypes.object.isRequired
+  onStereoPan: PropTypes.func
 };
 
-export const StereoPanner = ({ sound }) => {
-  const [panValue, setPanValue] = useState(0);
+const defaultProps = {
+  onStereoPan: newStereoPanValue => console.log('~~~ newStereoPanValue', newStereoPanValue)
+};
 
-  const onChange = newPanValue => {
-    setPanValue(newPanValue);
+export const StereoPanner = ({ onStereoPan }) => {
+  const [stereoPanValue, setStereoPanValue] = useState(0);
 
-    sound.stereo(newPanValue);
+  const onChange = newStereoPanValue => {
+    setStereoPanValue(newStereoPanValue);
+
+    onStereoPan(newStereoPanValue);
   };
 
   return (
@@ -21,11 +25,12 @@ export const StereoPanner = ({ sound }) => {
       max={1}
       onChange={e => onChange(parseFloat(e.target.value))}
       step={0.01}
-      value={panValue}
+      value={stereoPanValue}
     />
   );
 };
 
 StereoPanner.propTypes = propTypes;
+StereoPanner.defaultProps = defaultProps;
 
 export default StereoPanner;
