@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { hot } from 'react-hot-loader/root';
 
-import { exportSound, getHowlerSound } from './utils/audioUtils';
+import AudioBus from './models/AudioBus';
+import Sound from './models/Sound';
+
+import { exportBufferToWav } from './utils/audioUtils';
 
 import FileLoader from './components/FileLoader';
 import StereoPanner from './components/StereoPanner';
@@ -11,20 +14,42 @@ import StereoPanner from './components/StereoPanner';
 import styles from './App.module.css';
 
 function App() {
+  const [audioBuffer, setAudioBuffer] = useState();
+  const [audioBus, setAudioBus] = useState();
+  const [audioContext] = useState(new AudioContext());
   const [fileName, setFileName] = useState('');
   const [showFileLoader, setShowFileLoader] = useState(false);
-  const [sound, setSound] = useState({});
+  const [sound, setSound] = useState();
 
-  const onFileLoad = async (newFileName, newFileType, newFileData) => {
-    const newSound = await getHowlerSound(newFileData.fileString);
+  const onFileLoad = (newFileName, newFileType, newFileData) => {
+    audioContext.decodeAudioData(newFileData.arrayBuffer, newAudioBuffer => {
+      const newAudioBus = new AudioBus(audioContext);
+      const newSound = new Sound(audioContext, newAudioBuffer, newAudioBus);
+
+      setAudioBuffer(newAudioBuffer);
+      setAudioBus(newAudioBus);
+      setSound(newSound);
+    });
 
     setFileName(newFileName);
-    setSound(newSound);
   };
 
   const onExport = () => {
-    const outputFileName = `${fileName}-export.wav`;
-    exportSound(sound.audioBuffer, outputFileName);
+    const offlineContext = new OfflineAudioContext(
+      audioBuffer.numberOfChannels,
+      audioBuffer.length,
+      audioBuffer.sampleRate
+    );
+    const offlineAudioBus = new AudioBus(offlineContext);
+    const offlineSound = new Sound(offlineContext, audioBuffer, offlineAudioBus);
+
+    offlineAudioBus.pan(audioBus.panValue);
+    offlineSound.play();
+
+    offlineContext.startRendering().then(renderedBuffer => {
+      const outputFileName = `${fileName}-export.wav`;
+      exportBufferToWav(renderedBuffer, outputFileName);
+    });
   };
 
   return (
@@ -38,7 +63,7 @@ function App() {
       <div className={styles.container}>
         <div className={styles.content}>
           {
-            isEmpty(sound)
+            isEmpty(audioBus) || isEmpty(sound)
               ?
               <Button
                 onClick={() => setShowFileLoader(true)}
@@ -49,7 +74,7 @@ function App() {
               :
               <>
                 <StereoPanner
-                  onStereoPan={newStereoPanValue => sound.stereo(newStereoPanValue)}
+                  onStereoPan={newPan => audioBus.pan(newPan)}
                 />
 
                 <div className={styles.actions}>
@@ -73,11 +98,10 @@ function App() {
                   </Button>
                   <Button
                     onClick={() => {
-                      sound.unload();
-
+                      setAudioBuffer();
+                      setAudioBus();
                       setFileName('');
                       setShowFileLoader(true);
-                      setSound({});
                     }}
                     variant="primary"
                   >
