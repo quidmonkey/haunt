@@ -50,14 +50,14 @@ export class AudioBus {
     }
   }
 
-  gain(newGain) {
-    this.gainNode.gain.setValueAtTime(newGain, this.context.currentTime);
-    this.gainValue = newGain;
+  gain(newGainValue, time = this.context.currentTime) {
+    this.gainNode.gain.setValueAtTime(newGainValue, time);
+    this.gainValue = newGainValue;
   }
 
-  pan(newPan) {
-    this.stereoPannerNode.pan.setValueAtTime(newPan, this.context.currentTime);
-    this.panValue = newPan;
+  pan(newPanValue, time = this.context.currentTime) {
+    this.stereoPannerNode.pan.setValueAtTime(newPanValue, time);
+    this.panValue = newPanValue;
   }
 }
 

@@ -54,11 +54,11 @@ function App() {
               <>
                 <Fader
                   defaultValue={channel.gainValue}
-                  onGain={newGain => channel.gain(newGain)}
+                  onGainChange={newGainValue => channel.gain(newGainValue)}
                 />
                 <StereoPanner
                   defaultValue={channel.panValue}
-                  onPanChange={newPan => channel.pan(newPan)}
+                  onPanChange={newPanValue => channel.pan(newPanValue)}
                 />
 
                 <div className={styles.actions}>
@@ -78,7 +78,7 @@ function App() {
                     onClick={onExport}
                     variant="primary"
                   >
-                    Export WAV
+                    Export Wav
                   </Button>
                   <Button
                     onClick={() => {
@@ -87,7 +87,7 @@ function App() {
                     }}
                     variant="primary"
                   >
-                    Load WAV
+                    Load Wav
                   </Button>
                 </div>
               </>
