@@ -6,21 +6,21 @@ import styles from './StereoPanner.module.css';
 
 const propTypes = {
   defaultValue: PropTypes.number,
-  onStereoPan: PropTypes.func
+  onPanChange: PropTypes.func
 };
 
 const defaultProps = {
   defaultValue: 0,
-  onStereoPan: newPanValue => console.log('~~~ newPanValue', newPanValue)
+  onPanChange: newPanValue => console.log('~~~ newPanValue', newPanValue)
 };
 
-export const StereoPanner = ({ defaultValue, onStereoPan }) => {
+export const StereoPanner = ({ defaultValue, onPanChange }) => {
   const [panValue, setPanValue] = useState(defaultValue);
 
   const onChange = newPanValue => {
     setPanValue(newPanValue);
 
-    onStereoPan(newPanValue);
+    onPanChange(newPanValue);
   };
 
   return (

@@ -6,21 +6,21 @@ import styles from './Fader.module.css';
 
 const propTypes = {
   defaultValue: PropTypes.number,
-  onGain: PropTypes.func
+  onGainChange: PropTypes.func
 };
 
 const defaultProps = {
   defaultValue: 1,
-  onGain: newGainValue => console.log('~~~ newGainValue', newGainValue)
+  onGainChange: newGainValue => console.log('~~~ newGainValue', newGainValue)
 };
 
-export const Fader = ({ defaultValue, onGain }) => {
+export const Fader = ({ defaultValue, onGainChange }) => {
   const [gainValue, setGainValue] = useState(defaultValue);
 
   const onChange = newGainValue => {
     setGainValue(newGainValue);
 
-    onGain(newGainValue);
+    onGainChange(newGainValue);
   };
 
   return (
