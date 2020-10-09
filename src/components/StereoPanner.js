@@ -2,31 +2,40 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
 
+import styles from './StereoPanner.module.css';
+
 const propTypes = {
   onStereoPan: PropTypes.func
 };
 
 const defaultProps = {
-  onStereoPan: newStereoPanValue => console.log('~~~ newStereoPanValue', newStereoPanValue)
+  onStereoPan: newPanValue => console.log('~~~ newPanValue', newPanValue)
 };
 
 export const StereoPanner = ({ onStereoPan }) => {
-  const [stereoPanValue, setStereoPanValue] = useState(0);
+  const [panValue, setPanValue] = useState(0);
 
-  const onChange = newStereoPanValue => {
-    setStereoPanValue(newStereoPanValue);
+  const onChange = newPanValue => {
+    setPanValue(newPanValue);
 
-    onStereoPan(newStereoPanValue);
+    onStereoPan(newPanValue);
   };
 
   return (
-    <RangeSlider
-      min={-1}
-      max={1}
-      onChange={e => onChange(parseFloat(e.target.value))}
-      step={0.01}
-      value={stereoPanValue}
-    />
+    <div>
+      <div className={styles.label}>
+        <span>L</span>
+        <span>R</span>
+      </div>
+      <RangeSlider
+        className={styles.slider}
+        min={-1}
+        max={1}
+        onChange={e => onChange(parseFloat(e.target.value))}
+        step={0.01}
+        value={panValue}
+      />
+    </div>
   );
 };
 

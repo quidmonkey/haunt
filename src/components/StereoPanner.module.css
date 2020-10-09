@@ -1,0 +1,11 @@
+.label {
+  display: flex;
+  justify-content: space-between;
+
+  color: var(--white);
+  font-size: 0.8rem;
+}
+
+.slider {
+  margin-top: -13px;
+}
