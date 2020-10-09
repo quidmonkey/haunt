@@ -40,7 +40,7 @@ export const Fader = ({ defaultValue, onGainChange }) => {
           tooltip="off"
           value={gainValue}
         />
-        <span className={styles.bottomLabel}>
+        <span className={styles.faderBottomLabel}>
           0
         </span>
       </div>
