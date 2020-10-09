@@ -35,9 +35,10 @@ export const StereoPanner = ({ defaultValue, onPanChange }) => {
         </div>
         <Slider
           className={styles.slider}
+          defaultValue={0}
           min={-1}
           max={1}
-          onChange={e => onChange(parseFloat(e.target.value))}
+          onChange={newValue => onChange(newValue)}
           step={0.01}
           value={panValue}
         />

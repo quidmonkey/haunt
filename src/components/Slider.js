@@ -6,20 +6,37 @@ import styles from './Slider.module.css';
 
 const propTypes = {
   className: PropTypes.string,
+  defaultValue: PropTypes.number,
+  onChange: PropTypes.func,
   vertical: PropTypes.bool,
 };
 
 const defaultProps = {
   className: '',
+  defaultValue: 0,
+  onChange: newValue => console.log('~~~ newValue', newValue),
   vertical: false
 };
 
-export const Slider = ({ className, vertical, ...props }) => {
+export const Slider = ({ className, defaultValue, onChange, vertical, ...props }) => {
+  const onSliderChange = e => {
+    e.preventDefault();
+    onChange(
+      parseFloat(e.target.value)
+    );
+  };
+
+  const onSliderDoubleClick = e => {
+    e.preventDefault();
+    onChange(defaultValue);
+  };
 
   if (vertical) {
     return (
       <RangeSlider
         className={`${styles.slider} ${styles.verticalSlider} ${className}`}
+        onChange={onSliderChange}
+        onDoubleClick={onSliderDoubleClick}
         {...props}
       />
     );
@@ -28,6 +45,8 @@ export const Slider = ({ className, vertical, ...props }) => {
   return (
     <RangeSlider
       className={`${styles.slider} ${className}`}
+      onChange={onSliderChange}
+      onDoubleClick={onSliderDoubleClick}
       {...props}
     />
   );

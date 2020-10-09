@@ -7,7 +7,7 @@ import Channel from './models/Channel';
 
 import Fader from './components/Fader';
 import FileLoader from './components/FileLoader';
-import StereoPanner from './components/StereoPanner';
+import Panner from './components/Panner';
 
 import styles from './App.module.css';
 
@@ -52,14 +52,17 @@ function App() {
               </Button>
               :
               <>
-                <Fader
-                  defaultValue={channel.gainValue}
-                  onGainChange={newGainValue => channel.gain(newGainValue)}
-                />
-                <StereoPanner
-                  defaultValue={channel.posValue.x}
-                  onPanChange={newPanValue => channel.pos({ x: newPanValue })}
-                />
+                <div className={styles.controls}>
+                  <Fader
+                    defaultValue={channel.gainValue}
+                    onFaderChange={newGainValue => channel.gain(newGainValue)}
+                  />
+
+                  <Panner
+                    defaultValue={channel.posValue}
+                    onPannerChange={newPosValue => channel.pos(newPosValue)}
+                  />
+                </div>
 
                 <div className={styles.actions}>
                   <Button
@@ -82,7 +85,9 @@ function App() {
                   </Button>
                   <Button
                     onClick={() => {
-                      setChannel();
+                      channel.stop();
+
+                      setChannel({});
                       setShowFileLoader(true);
                     }}
                     variant="primary"

@@ -8,21 +8,21 @@ import styles from './Fader.module.css';
 
 const propTypes = {
   defaultValue: PropTypes.number,
-  onGainChange: PropTypes.func
+  onFaderChange: PropTypes.func
 };
 
 const defaultProps = {
   defaultValue: 1,
-  onGainChange: newGainValue => console.log('~~~ newGainValue', newGainValue)
+  onFaderChange: newGainValue => console.log('~~~ newGainValue', newGainValue)
 };
 
-export const Fader = ({ defaultValue, onGainChange }) => {
+export const Fader = ({ defaultValue, onFaderChange }) => {
   const [gainValue, setGainValue] = useState(defaultValue);
 
-  const onChange = newGainValue => {
+  const onSliderChange = newGainValue => {
     setGainValue(newGainValue);
 
-    onGainChange(newGainValue);
+    onFaderChange(newGainValue);
   };
 
   return (
@@ -36,7 +36,7 @@ export const Fader = ({ defaultValue, onGainChange }) => {
         <Slider
           min={0}
           max={1}
-          onChange={e => onChange(parseFloat(e.target.value))}
+          onChange={newValue => onSliderChange(newValue)}
           step={0.01}
           tooltip="off"
           value={gainValue}
