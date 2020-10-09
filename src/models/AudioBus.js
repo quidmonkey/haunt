@@ -12,7 +12,13 @@
  * @method pan
  */
 export class AudioBus {
-  constructor(context, options = { gain: 1, pan: 0 }) {
+  constructor(
+    context,
+    {
+      gain = 1,
+      pan = 0
+    } = {}
+  ) {
     const gainNode = context.createGain();
     const stereoPannerNode = context.createStereoPanner();
 
@@ -24,18 +30,24 @@ export class AudioBus {
     this.inputNode = {};
     this.stereoPannerNode = stereoPannerNode;
 
-    this.gainValue = options.gain;
-    this.panValue = options.pan;
+    this.gain(gain);
+    this.pan(pan);
   }
 
   attach(inputNode) {
+    if (this.inputNode instanceof AudioBufferSourceNode) {
+      this.detach();
+    }
+
     inputNode.connect(this.stereoPannerNode);
     this.inputNode = inputNode;
   }
 
   detach() {
-    this.inputNode.disconnect(this.stereoPannerNode);
-    this.inputNode = {};
+    if (this.inputNode instanceof AudioBufferSourceNode) {
+      this.inputNode.disconnect(this.stereoPannerNode);
+      this.inputNode = {};
+    }
   }
 
   gain(newGain) {

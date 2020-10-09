@@ -18,7 +18,10 @@ function App() {
 
   const onFileLoad = (newFileName, newFileType, newFileData) => {
     audioContext.decodeAudioData(newFileData.arrayBuffer, newAudioBuffer => {
-      const newChannel = new Channel(audioContext, newAudioBuffer, newFileName);
+      const newChannel = new Channel(audioContext, {
+        audioBuffer: newAudioBuffer,
+        file: newFileName
+      });
 
       setChannel(newChannel);
     });
@@ -45,28 +48,28 @@ function App() {
                 onClick={() => setShowFileLoader(true)}
                 variant="primary"
               >
-                Load WAV
+                Load Wav
               </Button>
               :
               <>
                 <Fader
-                  defaultValue={channel.audioBus.gainValue}
-                  onGain={newGain => channel.audioBus.gain(newGain)}
+                  defaultValue={channel.gainValue}
+                  onGain={newGain => channel.gain(newGain)}
                 />
                 <StereoPanner
-                  defaultValue={channel.audioBus.panValue}
-                  onStereoPan={newPan => channel.audioBus.pan(newPan)}
+                  defaultValue={channel.panValue}
+                  onStereoPan={newPan => channel.pan(newPan)}
                 />
 
                 <div className={styles.actions}>
                   <Button
-                    onClick={() => channel.sound.play()}
+                    onClick={() => channel.play()}
                     variant="primary"
                   >
                     Play
                   </Button>
                   <Button
-                    onClick={() => channel.sound.stop()}
+                    onClick={() => channel.stop()}
                     variant="primary"
                   >
                     Stop

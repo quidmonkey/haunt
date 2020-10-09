@@ -1,34 +1,101 @@
 import AudioBus from './AudioBus';
-import Sound from './Sound';
 
 import { exportBufferToWav } from '../utils/audioUtils';
 
-export class Channel {
-  constructor(context, audioBuffer, name = '') {
-    const audioBus = new AudioBus(context);
-    const sound = new Sound(context, audioBuffer, audioBus);
+/**
+ * @class
+ * @property {AudioBuffer} audioBuffer
+ * @property {AudioBufferSourceNode} inputNode
+ * @property {Boolean} loop
+ * @property {string} name
+ * @property {Boolean} playing
+ * @method connect
+ * @method disconnect
+ * @method export
+ * @method play
+ * @method stop
+ */
+export class Channel extends AudioBus {
+  constructor(
+    context,
+    {
+      audioBuffer = {},
+      gain = 1,
+      loop = true,
+      name = '',
+      pan = 0
+    } = {}
+  ) {
+    super(context, { gain, pan });
 
-    this.audioBus = audioBus;
+    this.audioBuffer = audioBuffer;
+    this.inputNode = {};
+    this.loop = loop;
     this.name = name;
-    this.sound = sound;
+    this.playing = false;
+  }
+
+  connect(audioBuffer) {
+    this.audioBuffer = audioBuffer;
+
+    if (this.playing) {
+      this.stop();
+    } else {
+      this.detach();
+    }
+  }
+
+  disconnect() {
+    this.audioBuffer = {};
+
+    if (this.playing) {
+      this.stop();
+    } else {
+      this.detach();
+    }
   }
 
   export() {
     const offlineContext = new OfflineAudioContext(
-      this.sound.audioBuffer.numberOfChannels,
-      this.sound.audioBuffer.length,
-      this.sound.audioBuffer.sampleRate
+      this.audioBuffer.numberOfChannels,
+      this.audioBuffer.length,
+      this.audioBuffer.sampleRatef
     );
-    const offlineAudioBus = new AudioBus(offlineContext);
-    const offlineSound = new Sound(offlineContext, this.sound.audioBuffer, offlineAudioBus);
+    const offlineChannel = new Channel(offlineContext, {
+      audioBuffer: this.audioBuffer,
+      gain: this.gainValue,
+      pan: this.panValue
+    });
 
-    offlineAudioBus.pan(this.audioBus.panValue);
-    offlineSound.play();
+    offlineChannel.play();
 
     offlineContext.startRendering().then(renderedBuffer => {
       const outputFileName = `${this.name}-export.wav`;
       exportBufferToWav(renderedBuffer, outputFileName);
     });
+  }
+
+  play(time = 0) {
+    if (!this.playing && this.audioBuffer instanceof AudioBuffer) {
+      const inputNode = this.context.createBufferSource();
+
+      inputNode.buffer = this.audioBuffer;
+      inputNode.loop = this.loop;
+
+      this.attach(inputNode);
+
+      inputNode.start(time);
+
+      this.playing = true;
+    }
+  }
+
+  stop() {
+    if (this.playing) {
+      this.inputNode.stop();
+      this.detach();
+      this.playing = false;
+    }
   }
 }
 
