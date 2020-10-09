@@ -20,7 +20,7 @@ function App() {
     audioContext.decodeAudioData(newFileData.arrayBuffer, newAudioBuffer => {
       const newChannel = new Channel(audioContext, {
         audioBuffer: newAudioBuffer,
-        file: newFileName
+        name: newFileName
       });
 
       setChannel(newChannel);

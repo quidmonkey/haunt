@@ -59,7 +59,7 @@ export class Channel extends AudioBus {
     const offlineContext = new OfflineAudioContext(
       this.audioBuffer.numberOfChannels,
       this.audioBuffer.length,
-      this.audioBuffer.sampleRatef
+      this.audioBuffer.sampleRate
     );
     const offlineChannel = new Channel(offlineContext, {
       audioBuffer: this.audioBuffer,
