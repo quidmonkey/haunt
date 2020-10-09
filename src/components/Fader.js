@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import RangeSlider from 'react-bootstrap-range-slider';
+// import RangeSlider from 'react-bootstrap-range-slider';
+
+import Slider from './Slider';
 
 import styles from './Fader.module.css';
 
@@ -31,16 +33,16 @@ export const Fader = ({ defaultValue, onGainChange }) => {
         <span>
           100
         </span>
-        <RangeSlider
-          className={styles.fader}
+        <Slider
           min={0}
           max={1}
           onChange={e => onChange(parseFloat(e.target.value))}
           step={0.01}
           tooltip="off"
           value={gainValue}
+          vertical={true}
         />
-        <span className={styles.faderBottomLabel}>
+        <span>
           0
         </span>
       </div>

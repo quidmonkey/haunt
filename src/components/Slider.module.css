@@ -1,0 +1,8 @@
+.slider {
+  min-width: 130px;
+}
+
+.verticalSlider {
+  min-height: 130px;
+  transform: rotate(270deg);
+}

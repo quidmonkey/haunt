@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import RangeSlider from 'react-bootstrap-range-slider';
+
+import Slider from './Slider';
 
 import styles from './StereoPanner.module.css';
 
@@ -32,7 +33,7 @@ export const StereoPanner = ({ defaultValue, onPanChange }) => {
           <span>L</span>
           <span>R</span>
         </div>
-        <RangeSlider
+        <Slider
           className={styles.slider}
           min={-1}
           max={1}
