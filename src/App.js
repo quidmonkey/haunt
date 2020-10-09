@@ -3,10 +3,7 @@ import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { hot } from 'react-hot-loader/root';
 
-import AudioBus from './models/AudioBus';
-import Sound from './models/Sound';
-
-import { exportBufferToWav } from './utils/audioUtils';
+import Channel from './models/Channel';
 
 import FileLoader from './components/FileLoader';
 import StereoPanner from './components/StereoPanner';
@@ -14,42 +11,20 @@ import StereoPanner from './components/StereoPanner';
 import styles from './App.module.css';
 
 function App() {
-  const [audioBuffer, setAudioBuffer] = useState();
-  const [audioBus, setAudioBus] = useState();
   const [audioContext] = useState(new AudioContext());
-  const [fileName, setFileName] = useState('');
+  const [channel, setChannel] = useState({});
   const [showFileLoader, setShowFileLoader] = useState(false);
-  const [sound, setSound] = useState();
 
   const onFileLoad = (newFileName, newFileType, newFileData) => {
     audioContext.decodeAudioData(newFileData.arrayBuffer, newAudioBuffer => {
-      const newAudioBus = new AudioBus(audioContext);
-      const newSound = new Sound(audioContext, newAudioBuffer, newAudioBus);
+      const newChannel = new Channel(audioContext, newAudioBuffer, newFileName);
 
-      setAudioBuffer(newAudioBuffer);
-      setAudioBus(newAudioBus);
-      setSound(newSound);
+      setChannel(newChannel);
     });
-
-    setFileName(newFileName);
   };
 
   const onExport = () => {
-    const offlineContext = new OfflineAudioContext(
-      audioBuffer.numberOfChannels,
-      audioBuffer.length,
-      audioBuffer.sampleRate
-    );
-    const offlineAudioBus = new AudioBus(offlineContext);
-    const offlineSound = new Sound(offlineContext, audioBuffer, offlineAudioBus);
-
-    offlineAudioBus.pan(audioBus.panValue);
-    offlineSound.play();
-
-    offlineContext.startRendering().then(renderedBuffer => {
-      const outputFileName = `${fileName}-export.wav`;
-      exportBufferToWav(renderedBuffer, outputFileName);
-    });
+    channel.export();
   };
 
   return (
@@ -63,7 +38,7 @@ function App() {
       <div className={styles.container}>
         <div className={styles.content}>
           {
-            isEmpty(audioBus) || isEmpty(sound)
+            isEmpty(channel)
               ?
               <Button
                 onClick={() => setShowFileLoader(true)}
@@ -74,18 +49,18 @@ function App() {
               :
               <>
                 <StereoPanner
-                  onStereoPan={newPan => audioBus.pan(newPan)}
+                  onStereoPan={newPan => channel.audioBus.pan(newPan)}
                 />
 
                 <div className={styles.actions}>
                   <Button
-                    onClick={() => sound.play()}
+                    onClick={() => channel.sound.play()}
                     variant="primary"
                   >
                     Play
                   </Button>
                   <Button
-                    onClick={() => sound.stop()}
+                    onClick={() => channel.sound.stop()}
                     variant="primary"
                   >
                     Stop
@@ -98,9 +73,7 @@ function App() {
                   </Button>
                   <Button
                     onClick={() => {
-                      setAudioBuffer();
-                      setAudioBus();
-                      setFileName('');
+                      setChannel();
                       setShowFileLoader(true);
                     }}
                     variant="primary"
