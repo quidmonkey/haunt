@@ -4,34 +4,40 @@
  * @property {number} gainValue
  * @property {GainNode} gainNode
  * @property {AudioBufferSourceNode} inputNode
- * @property {number} panValue
- * @property {StereoPannerNode} stereoPannerNode
+ * @property {Object} posValue
+ * @property {number} posValue.x
+ * @property {number} posValue.y
+ * @property {number} posValue.z
+ * @property {PannerNode} pannerNode
  * @method attach
  * @method detach
  * @method gain
- * @method pan
+ * @method pos
  */
 export class AudioBus {
   constructor(
     context,
     {
       gain = 1,
-      pan = 0
+      pos = { x: 0, y: 0, z: 0 }
     } = {}
   ) {
     const gainNode = context.createGain();
-    const stereoPannerNode = context.createStereoPanner();
+    const pannerNode = context.createPanner();
 
-    stereoPannerNode.connect(gainNode);
+    pannerNode.panningModel = 'HRTF';
+    pannerNode.setPosition(pos.x, pos.y, pos.z);
+
     gainNode.connect(context.destination);
+    pannerNode.connect(gainNode);
 
     this.context = context;
     this.gainNode = gainNode;
     this.inputNode = {};
-    this.stereoPannerNode = stereoPannerNode;
+    this.pannerNode = pannerNode;
+    this.posValue = pos;
 
     this.gain(gain);
-    this.pan(pan);
   }
 
   attach(inputNode) {
@@ -39,13 +45,13 @@ export class AudioBus {
       this.detach();
     }
 
-    inputNode.connect(this.stereoPannerNode);
+    inputNode.connect(this.pannerNode);
     this.inputNode = inputNode;
   }
 
   detach() {
     if (this.inputNode instanceof AudioBufferSourceNode) {
-      this.inputNode.disconnect(this.stereoPannerNode);
+      this.inputNode.disconnect(this.pannerNode);
       this.inputNode = {};
     }
   }
@@ -55,9 +61,15 @@ export class AudioBus {
     this.gainValue = newGainValue;
   }
 
-  pan(newPanValue, time = this.context.currentTime) {
-    this.stereoPannerNode.pan.setValueAtTime(newPanValue, time);
-    this.panValue = newPanValue;
+  pos(
+    { x = this.posValue.x, y = this.posValue.y, z = this.posValue.z } = {},
+    time = this.context.currentTime
+  ) {
+    this.pannerNode.positionX.setValueAtTime(x, time);
+    this.pannerNode.positionY.setValueAtTime(y, time);
+    this.pannerNode.positionZ.setValueAtTime(z, time);
+
+    this.posValue = { x, y, z };
   }
 }
 

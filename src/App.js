@@ -57,8 +57,8 @@ function App() {
                   onGainChange={newGainValue => channel.gain(newGainValue)}
                 />
                 <StereoPanner
-                  defaultValue={channel.panValue}
-                  onPanChange={newPanValue => channel.pan(newPanValue)}
+                  defaultValue={channel.posValue.x}
+                  onPanChange={newPanValue => channel.pos({ x: newPanValue })}
                 />
 
                 <div className={styles.actions}>

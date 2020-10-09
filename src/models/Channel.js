@@ -23,10 +23,10 @@ export class Channel extends AudioBus {
       gain = 1,
       loop = true,
       name = '',
-      pan = 0
+      pos = { x: 0, y: 0, z: 0 }
     } = {}
   ) {
-    super(context, { gain, pan });
+    super(context, { gain, pos });
 
     this.audioBuffer = audioBuffer;
     this.inputNode = {};
@@ -64,7 +64,7 @@ export class Channel extends AudioBus {
     const offlineChannel = new Channel(offlineContext, {
       audioBuffer: this.audioBuffer,
       gain: this.gainValue,
-      pan: this.panValue
+      pos: this.posValue
     });
 
     offlineChannel.play();
