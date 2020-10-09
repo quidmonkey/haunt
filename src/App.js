@@ -5,6 +5,7 @@ import { hot } from 'react-hot-loader/root';
 
 import Channel from './models/Channel';
 
+import Fader from './components/Fader';
 import FileLoader from './components/FileLoader';
 import StereoPanner from './components/StereoPanner';
 
@@ -48,7 +49,12 @@ function App() {
               </Button>
               :
               <>
+                <Fader
+                  defaultValue={channel.audioBus.gainValue}
+                  onGain={newGain => channel.audioBus.gain(newGain)}
+                />
                 <StereoPanner
+                  defaultValue={channel.audioBus.panValue}
                   onStereoPan={newPan => channel.audioBus.pan(newPan)}
                 />
 

@@ -10,17 +10,21 @@
   text-align: center;
 }
 
-.sliderContainer {
-  margin-top: -10px;
-}
-
-.label {
+.faderContainer {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
 
-  font-size: 0.8rem;
+  height: 175px;
 }
 
-.slider {
-  margin-top: -13px;
+.fader {
+  margin-top: 52px;
+
+  transform: rotate(270deg);
+}
+
+.bottomLabel {
+  margin-top: 50px;
 }
