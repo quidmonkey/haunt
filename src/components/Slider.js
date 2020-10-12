@@ -33,12 +33,15 @@ export const Slider = ({ className, defaultValue, onChange, vertical, ...props }
 
   if (vertical) {
     return (
-      <RangeSlider
-        className={`${styles.slider} ${styles.verticalSlider} ${className}`}
-        onChange={onSliderChange}
+      <span
         onDoubleClick={onSliderDoubleClick}
-        {...props}
-      />
+      >
+        <RangeSlider
+          className={`${styles.slider} ${styles.verticalSlider} ${className}`}
+          onChange={onSliderChange}
+          {...props}
+        />
+      </span>
     );
   }
 
