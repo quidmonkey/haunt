@@ -27,8 +27,8 @@ export class AudioBus {
 
     // normalize distances
     const newMaxDistance = Math.sqrt(3);
-    const newRefDistance = pannerNode.refDistance / pannerNode.maxDistance;
-    const newRolloffFactor = pannerNode.rolloffFactor / pannerNode.maxDistance;
+    const newRefDistance = (pannerNode.refDistance / pannerNode.maxDistance) * newMaxDistance;
+    const newRolloffFactor = (pannerNode.rolloffFactor / pannerNode.maxDistance) * newMaxDistance;
 
     pannerNode.maxDistance = newMaxDistance;
     pannerNode.panningModel = 'HRTF';
